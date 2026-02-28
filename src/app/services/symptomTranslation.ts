@@ -293,7 +293,7 @@ const TAMIL_SYMPTOM_MAP: Record<string, string> = {
   'மூச்சு அடைப்பு': 'choking',
 };
 
-import { groq, USE_LLAMA } from './aiService';
+import { grok, GROK_MODEL, USE_GROK } from './aiService';
 
 /**
  * Translate symptoms from Hindi/Tamil to English using AI
@@ -304,8 +304,8 @@ export async function translateSymptoms(text: string, language: 'en' | 'hi' | 't
     return text;
   }
 
-  // Use Llama for high-fidelity medical translation
-  if (USE_LLAMA && groq) {
+  // Use Grok for high-fidelity medical translation
+  if (USE_GROK && grok) {
     try {
       const prompt = `Translate the following medical symptoms from ${language === 'hi' ? 'Hindi' : 'Tamil'} to precise medical English. 
 Refine the description for a doctor's understanding while preserving all details.
@@ -314,8 +314,8 @@ Symptoms: "${text}"
 
 Respond with ONLY the English translation. No other text.`;
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+      const completion = await grok.chat.completions.create({
+        model: GROK_MODEL,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0,
       });
@@ -323,7 +323,7 @@ Respond with ONLY the English translation. No other text.`;
       const translated = completion.choices[0]?.message?.content?.trim();
       if (translated) return translated;
     } catch (error) {
-      console.error('Llama Translation Error:', error);
+      console.error('Grok Translation Error:', error);
       // Fallback to rule-based mapping
     }
   }

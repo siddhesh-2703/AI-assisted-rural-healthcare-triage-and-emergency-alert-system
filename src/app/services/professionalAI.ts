@@ -1,7 +1,7 @@
 import type { AnalysisResult } from '../App';
 import { MEDICAL_CONDITIONS, MEDICINE_DATABASE } from './medicalDatabase';
 import { CONDITION_FIRST_AID, getSymptomSpecificTips } from './conditionSpecificFirstAid';
-import { groq, USE_LLAMA } from './aiService';
+import { grok, GROK_MODEL, USE_GROK } from './aiService';
 
 /**
  * PROFESSIONAL MEDICAL AI SYSTEM
@@ -924,8 +924,8 @@ function generateMedicineRecommendations(
 
 // Main analysis function
 export async function analyzeSymptomsWithAI(input: string, language: string = 'en', imageAnalysis?: any): Promise<AnalysisResult> {
-  // Use Llama for high-precision clinical analysis if enabled
-  if (USE_LLAMA && groq) {
+  // Use Grok for high-precision clinical analysis if enabled
+  if (USE_GROK && grok) {
     try {
       const languageFullName = language === 'hi' ? 'Hindi' : language === 'ta' ? 'Tamil' : 'English';
       const prompt = `You are a Senior Medical Officer specialized in rural healthcare triage. 
@@ -963,8 +963,8 @@ Respond with valid JSON:
   "warningSignsToWatch": ["..."]
 }`;
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+      const completion = await grok.chat.completions.create({
+        model: GROK_MODEL,
         messages: [
           {
             role: 'system',
@@ -991,7 +991,7 @@ Respond with valid JSON:
         timestamp: new Date().toISOString(),
       } as AnalysisResult;
     } catch (error) {
-      console.error('Llama Professional Analysis Error:', error);
+      console.error('Grok Professional Analysis Error:', error);
       // Fallback to rule-based system below
     }
   }

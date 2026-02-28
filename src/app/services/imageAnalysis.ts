@@ -3,7 +3,7 @@
  * Analyzes X-rays, wounds, skin conditions, and other medical images
  */
 
-import { groq, USE_LLAMA } from './aiService';
+import { grok, GROK_VISION_MODEL, USE_GROK } from './aiService';
 
 export interface ImageAnalysisResult {
   imageType: 'xray' | 'wound' | 'cut' | 'laceration' | 'skin' | 'burn' | 'rash' | 'fracture' | 'unknown';
@@ -35,15 +35,15 @@ export async function analyzeImage(imageFile: File, language: string = 'en'): Pr
   // Get image data
   const imageData = await readImageFile(imageFile);
 
-  // Use Llama 3.2 Vision for advanced interpretation if enabled
-  if (USE_LLAMA && groq) {
+  // Use Grok Vision for advanced interpretation if enabled
+  if (USE_GROK && grok) {
     try {
       // Convert image to base64 for vision API
       const base64Image = await fileToBase64(imageFile);
       const languageFullName = language === 'hi' ? 'Hindi' : language === 'ta' ? 'Tamil' : 'English';
 
-      const response = await groq.chat.completions.create({
-        model: 'llama-3.2-11b-vision-preview',
+      const response = await grok.chat.completions.create({
+        model: GROK_VISION_MODEL,
         messages: [
           {
             role: 'system',
@@ -93,7 +93,7 @@ export async function analyzeImage(imageFile: File, language: string = 'en'): Pr
       const result = JSON.parse(cleanedJSON);
       return result as ImageAnalysisResult;
     } catch (error) {
-      console.error('Llama Vision Analysis Error:', error);
+      console.error('Grok Vision Analysis Error:', error);
       // Fallback to rule-based analysis below
     }
   }

@@ -11,20 +11,35 @@ import { LanguageType } from '../context/LanguageContext';
  */
 
 export const USE_OPENAI = false;
-export const USE_LLAMA = import.meta.env.VITE_USE_LLAMA === 'true' || true;
+export const USE_GROK = import.meta.env.VITE_USE_GROK !== 'false' && import.meta.env.VITE_USE_LLAMA !== 'false';
 
-export const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || 'gsk_your_key_here';
+const XAI_API_KEY =
+  import.meta.env.VITE_GROK_API_KEY ||
+  import.meta.env.VITE_XAI_API_KEY ||
+  '';
+const GROQ_API_KEY_LEGACY = import.meta.env.VITE_GROQ_API_KEY || '';
+export const AI_PROVIDER = (import.meta.env.VITE_AI_PROVIDER || (XAI_API_KEY ? 'grok' : GROQ_API_KEY_LEGACY ? 'groq' : 'grok')).toLowerCase();
+export const GROK_API_KEY = XAI_API_KEY || GROQ_API_KEY_LEGACY;
+export const GROK_MODEL =
+  import.meta.env.VITE_GROK_MODEL ||
+  (AI_PROVIDER === 'groq' ? 'llama-3.3-70b-versatile' : 'grok-2-latest');
+export const GROK_VISION_MODEL =
+  import.meta.env.VITE_GROK_VISION_MODEL ||
+  (AI_PROVIDER === 'groq' ? 'llama-3.2-11b-vision-preview' : 'grok-2-vision-latest');
+export const AI_BASE_URL = AI_PROVIDER === 'groq' ? 'https://api.groq.com/openai/v1' : 'https://api.x.ai/v1';
 
 export const openai = USE_OPENAI ? new OpenAI({
   apiKey: 'YOUR_OPENAI_KEY',
   dangerouslyAllowBrowser: true,
 }) : null;
 
-export const groq = USE_LLAMA ? new OpenAI({
-  apiKey: GROQ_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1',
+export const grok = USE_GROK ? new OpenAI({
+  apiKey: GROK_API_KEY,
+  baseURL: AI_BASE_URL,
   dangerouslyAllowBrowser: true,
 }) : null;
+export const USE_LLAMA = USE_GROK;
+export const groq = grok;
 
 // Intelligent rule-based fallback analysis (production-quality)
 function intelligentAnalysis(symptomsText: string): AnalysisResult {
@@ -371,8 +386,8 @@ function intelligentAnalysis(symptomsText: string): AnalysisResult {
 }
 
 export async function analyzeSymptoms(symptomsText: string, language: LanguageType = 'en'): Promise<AnalysisResult> {
-  // Try Llama (Groq) API if enabled
-  if (USE_LLAMA && groq) {
+  // Try Grok (xAI) API if enabled
+  if (USE_GROK && grok) {
     try {
       const languageMap = {
         en: 'English',
@@ -406,8 +421,8 @@ Rules:
 - firstAid: Practical immediate steps in ${languageMap[language]}
 - Be cautious and recommend medical consultation when needed`;
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+      const completion = await grok.chat.completions.create({
+        model: GROK_MODEL,
         messages: [
           {
             role: 'system',
@@ -439,7 +454,7 @@ Rules:
 
       return result as AnalysisResult;
     } catch (error) {
-      console.error('Llama API Error:', error);
+      console.error('Grok API Error:', error);
       // Continue to OpenAI or fallback
     }
   }
@@ -600,8 +615,8 @@ function getChatbotFallbackResponse(message: string, language: 'en' | 'hi' | 'ta
 }
 
 export async function chatWithAI(message: string, language: 'en' | 'hi' | 'ta'): Promise<string> {
-  // Try Llama (Groq) API if enabled
-  if (USE_LLAMA && groq) {
+  // Try Grok (xAI) API if enabled
+  if (USE_GROK && grok) {
     try {
       const languageInstructions = {
         en: 'Respond in English',
@@ -609,8 +624,8 @@ export async function chatWithAI(message: string, language: 'en' | 'hi' | 'ta'):
         ta: 'Respond in Tamil (தமிழ்)',
       };
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+      const completion = await grok.chat.completions.create({
+        model: GROK_MODEL,
         messages: [
           {
             role: 'system',
@@ -627,7 +642,7 @@ export async function chatWithAI(message: string, language: 'en' | 'hi' | 'ta'):
 
       return completion.choices[0]?.message?.content || 'I apologize, I could not process your request.';
     } catch (error) {
-      console.error('Llama Chatbot Error:', error);
+      console.error('Grok Chatbot Error:', error);
       // Continue to OpenAI or fallback
     }
   }
