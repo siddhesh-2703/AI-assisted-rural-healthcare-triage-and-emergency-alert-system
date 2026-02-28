@@ -169,8 +169,8 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <div className="relative size-full min-h-screen overflow-x-hidden bg-slate-50">
-        <div className="pointer-events-none absolute inset-0">
+      <div className="relative w-full min-h-screen overflow-x-hidden bg-slate-50">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <motion.div
             className="absolute -top-36 -left-28 h-[30rem] w-[30rem] rounded-full bg-blue-400/35 blur-[120px]"
             animate={{ x: [0, 34, 0], y: [0, 26, 0], scale: [1, 1.16, 1] }}
