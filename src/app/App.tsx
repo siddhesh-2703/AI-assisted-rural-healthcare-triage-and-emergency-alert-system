@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import LandingPage from './components/LandingPage';
 import AuthPage from './components/AuthPage';
 import LoginScreen from './components/LoginScreen';
@@ -170,9 +171,26 @@ export default function App() {
     <LanguageProvider>
       <div className="relative size-full min-h-screen overflow-x-hidden bg-slate-50">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-28 -left-20 h-96 w-96 rounded-full bg-blue-200/35 blur-3xl" />
-          <div className="absolute top-1/3 -right-24 h-[28rem] w-[28rem] rounded-full bg-emerald-200/30 blur-3xl" />
-          <div className="absolute -bottom-28 left-1/3 h-96 w-96 rounded-full bg-pink-200/25 blur-3xl" />
+          <motion.div
+            className="absolute -top-36 -left-28 h-[30rem] w-[30rem] rounded-full bg-blue-400/35 blur-[120px]"
+            animate={{ x: [0, 34, 0], y: [0, 26, 0], scale: [1, 1.16, 1] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-1/3 -right-36 h-[34rem] w-[34rem] rounded-full bg-emerald-400/30 blur-[130px]"
+            animate={{ x: [0, -36, 0], y: [0, -24, 0], scale: [1, 1.2, 1] }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute -bottom-36 left-1/3 h-[30rem] w-[30rem] rounded-full bg-pink-400/28 blur-[120px]"
+            animate={{ x: [0, 28, 0], y: [0, -18, 0], scale: [1, 1.15, 1] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-1/4 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-violet-300/20 blur-[110px]"
+            animate={{ scale: [1, 1.22, 1], rotate: [0, 20, 0] }}
+            transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.04)_1px,transparent_1px)] bg-[length:22px_22px]" />
         </div>
         <div className="relative z-10">

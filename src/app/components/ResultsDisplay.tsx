@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Activity, AlertCircle, Phone, MapPin, Navigation, Clock, Heart, Download, List, Cloud, CloudOff, Loader2, Check, BellRing, Search, LocateFixed } from 'lucide-react';
+import { ArrowLeft, Activity, AlertCircle, Phone, MapPin, Navigation, Clock, Heart, Download, List, Cloud, CloudOff, Loader2, Check, BellRing, Search, LocateFixed, HeartPulse, Cross } from 'lucide-react';
 import type { AnalysisResult } from '../App';
 import { generateMedicalReportPDF, generateMedicalReportPDFBlob } from '../utils/pdfGenerator';
 import HospitalMap from './HospitalMap';
@@ -304,7 +304,33 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
   };
 
   return (
-    <div className="min-h-screen px-6 py-8 md:px-10 lg:px-14">
+    <div className="relative min-h-screen px-6 py-8 md:px-10 lg:px-14">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute top-8 left-6 h-80 w-80 rounded-full bg-blue-400/24 blur-[110px]"
+          animate={{ scale: [1, 1.2, 1], x: [0, 18, 0], y: [0, 12, 0] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-6 right-8 h-96 w-96 rounded-full bg-emerald-400/22 blur-[120px]"
+          animate={{ scale: [1, 1.16, 1], x: [0, -16, 0], y: [0, -14, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-[24%] right-[14%] opacity-25"
+          animate={{ y: [0, -14, 0], scale: [1, 1.12, 1] }}
+          transition={{ duration: 7, repeat: Infinity }}
+        >
+          <HeartPulse className="h-10 w-10 text-red-500" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-[22%] left-[14%] opacity-20"
+          animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        >
+          <Cross className="h-9 w-9 text-blue-500" />
+        </motion.div>
+      </div>
       <div className="mx-auto w-full max-w-7xl">
         {/* Header */}
         <motion.div

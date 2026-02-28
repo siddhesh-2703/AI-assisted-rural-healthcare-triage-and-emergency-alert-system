@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Activity, ArrowRight, Heart, MapPin, ShieldCheck, Stethoscope, Users } from 'lucide-react';
+import { Activity, ArrowRight, Cross, Heart, HeartPulse, MapPin, Microscope, ShieldCheck, Stethoscope, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLanguage, type LanguageType } from '../context/LanguageContext';
 
@@ -41,6 +41,44 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
   return (
     <div className="relative min-h-screen px-6 py-8 md:px-10 lg:px-14">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute -top-20 left-8 h-[22rem] w-[22rem] rounded-full bg-blue-400/30 blur-[110px]"
+          animate={{ scale: [1, 1.2, 1], y: [0, 20, 0], x: [0, 14, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-4 right-10 h-[24rem] w-[24rem] rounded-full bg-emerald-400/24 blur-[120px]"
+          animate={{ scale: [1, 1.24, 1], x: [0, -20, 0], y: [0, -14, 0] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-1/3 right-1/3 h-64 w-64 rounded-full bg-fuchsia-300/20 blur-[100px]"
+          animate={{ scale: [1, 1.18, 1], rotate: [0, 18, 0] }}
+          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute top-[18%] left-[10%] opacity-30"
+          animate={{ y: [0, -18, 0], rotate: [0, 10, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+        >
+          <Microscope className="h-10 w-10 text-blue-500" />
+        </motion.div>
+        <motion.div
+          className="absolute top-[26%] right-[12%] opacity-25"
+          animate={{ y: [0, -16, 0], scale: [1, 1.14, 1] }}
+          transition={{ duration: 7, repeat: Infinity }}
+        >
+          <HeartPulse className="h-12 w-12 text-emerald-500" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-[20%] left-[18%] opacity-25"
+          animate={{ y: [0, 14, 0], rotate: [0, -10, 0] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        >
+          <Cross className="h-9 w-9 text-violet-500" />
+        </motion.div>
+      </div>
       <div className="mx-auto w-full max-w-7xl">
         <motion.header
           className="mb-10 flex items-center justify-between rounded-2xl border border-white/70 bg-white/75 px-5 py-4 shadow-sm backdrop-blur-xl"
@@ -49,9 +87,13 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-red-50 p-2.5 text-red-600">
+            <motion.div
+              className="rounded-xl bg-red-50 p-2.5 text-red-600"
+              animate={{ scale: [1, 1.06, 1] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
               <Heart className="h-5 w-5 fill-red-600" />
-            </div>
+            </motion.div>
             <div>
               <h1 className="text-base font-semibold text-slate-900 md:text-lg">{t('landingBrand')}</h1>
               <p className="text-xs text-slate-600">{t('landingSubBrand')}</p>
@@ -120,15 +162,23 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <p className="mb-4 text-sm font-semibold text-slate-500">{t('landingLiveSnapshot')}</p>
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
               {stats.map((item) => (
-                <div key={item.key} className="rounded-2xl border border-slate-100 bg-white p-4">
-                  <div className={`mb-3 inline-flex rounded-xl p-2 ${item.className}`}>
+                <motion.div
+                  key={item.key}
+                  className="rounded-2xl border border-slate-100 bg-white p-4"
+                  whileHover={{ y: -2 }}
+                >
+                  <motion.div
+                    className={`mb-3 inline-flex rounded-xl p-2 ${item.className}`}
+                    whileHover={{ scale: 1.08, rotate: -4 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <item.icon className="h-4 w-4" />
-                  </div>
+                  </motion.div>
                   <p className="text-2xl font-semibold text-slate-900">
                     {liveStats[item.key].toLocaleString()}
                   </p>
                   <p className="text-xs text-slate-500">{item.label}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -141,13 +191,20 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           transition={{ duration: 0.55, delay: 0.35 }}
         >
           {features.map((feature) => (
-            <article key={feature.title} className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-sm backdrop-blur-xl">
-              <div className="mb-3 inline-flex rounded-xl bg-slate-100 p-2 text-slate-700">
+            <motion.article
+              key={feature.title}
+              className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-sm backdrop-blur-xl"
+              whileHover={{ y: -3, scale: 1.01 }}
+            >
+              <motion.div
+                className="mb-3 inline-flex rounded-xl bg-slate-100 p-2 text-slate-700"
+                whileHover={{ rotate: -6, scale: 1.06 }}
+              >
                 <feature.icon className="h-5 w-5" />
-              </div>
+              </motion.div>
               <h3 className="text-lg font-semibold text-slate-900">{feature.title}</h3>
               <p className="mt-2 text-sm text-slate-600">{feature.description}</p>
-            </article>
+            </motion.article>
           ))}
         </motion.section>
       </div>
