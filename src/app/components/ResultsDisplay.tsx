@@ -304,23 +304,23 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden py-8">
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
+    <div className="min-h-screen px-6 py-8 md:px-10 lg:px-14">
+      <div className="mx-auto w-full max-w-7xl">
         {/* Header */}
         <motion.div
-          className="mb-8"
+          className="mb-8 rounded-2xl border border-white/70 bg-white/75 px-5 py-4 shadow-sm backdrop-blur-xl"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
         >
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors mb-4"
+            className="mb-3 inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
           >
             <ArrowLeft className="w-5 h-5" />
             {t('newAnalysis')}
           </button>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">{t('analysisResults')}</h2>
-          <p className="text-gray-600">{t('analysisResults')}</p>
+          <h2 className="text-2xl font-semibold text-slate-900 md:text-3xl">{t('analysisResults')}</h2>
+          <p className="mt-1 text-sm text-slate-600">{t('analysisResults')}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -331,7 +331,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-red-50 border border-red-100 p-6 rounded-3xl flex items-center gap-6 shadow-sm mb-6"
+                className="mb-6 flex items-center gap-6 rounded-2xl border border-red-200 bg-red-50/90 p-6 shadow-sm"
               >
                 <div className="relative">
                   <motion.div
@@ -359,7 +359,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
 
             {/* Priority & Severity */}
             <motion.div
-              className={`bg-gradient-to-br ${colors.bg} rounded-3xl p-8 border-2 ${colors.border} shadow-xl`}
+              className={`bg-gradient-to-br ${colors.bg} rounded-2xl p-7 border-2 ${colors.border} shadow-sm`}
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
@@ -442,7 +442,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
 
             {/* Probable Conditions */}
             <motion.div
-              className="bg-white rounded-2xl p-6 shadow-lg"
+              className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-xl"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -509,7 +509,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
             {/* Image Analysis */}
             {result.imageAnalysis && (
               <motion.div
-                className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-xl"
+                className="rounded-2xl border border-white/70 bg-white/85 p-7 shadow-sm backdrop-blur-xl"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -542,7 +542,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
 
             {/* First Aid Steps */}
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-xl"
+              className="rounded-2xl border border-white/70 bg-white/85 p-7 shadow-sm backdrop-blur-xl"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -574,7 +574,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
             {/* Suggested Medicines */}
             {result.medicines && result.medicines.filter(m => m && m.trim().length > 0).length > 0 && (
               <motion.div
-                className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-xl"
+                className="rounded-2xl border border-white/70 bg-white/85 p-7 shadow-sm backdrop-blur-xl"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.45 }}
@@ -607,7 +607,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
           <div className="space-y-6">
             {/* Emergency Contacts */}
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl"
+              className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-xl"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -619,10 +619,6 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
                   className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = 'tel:108';
-                  }}
                 >
                   <Phone className="w-5 h-5" />
                   <div className="flex-1">
@@ -635,10 +631,6 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
                   className="flex items-center gap-3 p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = 'tel:102';
-                  }}
                 >
                   <Phone className="w-5 h-5" />
                   <div className="flex-1">
@@ -661,7 +653,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
 
             {/* Nearby Hospitals */}
             <motion.div
-              className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl"
+              className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-xl"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6 }}
@@ -766,10 +758,6 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
                                   <a
                                     href={`tel:${hospital.phone}`}
                                     className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      window.location.href = `tel:${hospital.phone}`;
-                                    }}
                                   >
                                     <Phone className="w-4 h-4" />
                                     Call
@@ -823,7 +811,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
 
             {/* Disclaimer */}
             <motion.div
-              className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-orange-200"
+              className="rounded-2xl border border-amber-200 bg-amber-50/85 p-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.8 }}
@@ -843,7 +831,7 @@ export default function ResultsDisplay({ result, onBack, userId }: ResultsDispla
             {/* Download PDF Report */}
             <motion.button
               onClick={() => generateMedicalReportPDF(result)}
-              className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+              className="w-full flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-6 py-4 text-white shadow-sm transition-colors hover:bg-blue-700"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9 }}

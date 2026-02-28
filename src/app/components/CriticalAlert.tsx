@@ -124,10 +124,6 @@ export default function CriticalAlert({ result, onClose }: CriticalAlertProps) {
             className="block w-full"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = 'tel:108';
-            }}
           >
             <div className="flex items-center justify-center gap-3 p-6 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-2xl shadow-lg">
               <motion.div
@@ -148,10 +144,6 @@ export default function CriticalAlert({ result, onClose }: CriticalAlertProps) {
             className="block w-full"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = 'tel:102';
-            }}
           >
             <div className="flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-2xl shadow-lg">
               <Phone className="w-6 h-6" />

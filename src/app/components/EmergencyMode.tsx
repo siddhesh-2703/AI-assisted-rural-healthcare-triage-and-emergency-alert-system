@@ -134,26 +134,18 @@ export default function EmergencyMode({ onBack, onAnalysisComplete }: EmergencyM
                     className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-semibold shadow-lg"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = 'tel:108';
-                    }}
                   >
                     <Phone className="w-6 h-6" />
-                    {t('callAmbulance')} (108)
+                    {t('call')} 108 ({t('ambulanceService')})
                   </motion.a>
                   <motion.a
                     href="tel:102"
                     className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl font-semibold shadow-lg"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = 'tel:102';
-                    }}
                   >
                     <Phone className="w-6 h-6" />
-                    {t('call102')}
+                    {t('call')} 102 ({t('medicalEmergencyContact')})
                   </motion.a>
                 </div>
               </div>

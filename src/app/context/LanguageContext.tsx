@@ -25,6 +25,96 @@ export const translations: Translations = {
         hi: 'ग्रामीण समुदायों के लिए त्वरित स्वास्थ्य परीक्षण',
         ta: 'கிராமப்புற சமூகங்களுக்கான உடனடி சுகாதார சோதனை'
     },
+    landingBrand: {
+        en: 'HealthAI Triage',
+        hi: 'हेल्थएआई ट्रायेज',
+        ta: 'ஹெல்த்ஏஐ ட்ரையாஜ்'
+    },
+    landingSubBrand: {
+        en: 'Rural healthcare support platform',
+        hi: 'ग्रामीण स्वास्थ्य सहायता मंच',
+        ta: 'கிராமப்புற சுகாதார ஆதரவு தளம்'
+    },
+    landingEnterPlatform: {
+        en: 'Enter Platform',
+        hi: 'प्लेटफ़ॉर्म में प्रवेश करें',
+        ta: 'தளத்திற்கு செல்லவும்'
+    },
+    landingServingCommunities: {
+        en: 'Serving rural and remote communities',
+        hi: 'ग्रामीण और दूरस्थ समुदायों की सेवा में',
+        ta: 'கிராமப்புற மற்றும் தொலைதூர சமூகங்களுக்கு சேவை'
+    },
+    landingHeroTitle: {
+        en: 'AI-guided triage that feels like a modern healthcare website',
+        hi: 'एआई-संचालित ट्रायेज जो आधुनिक हेल्थकेयर वेबसाइट जैसा अनुभव देता है',
+        ta: 'நவீன சுகாதார இணையதள அனுபவத்துடன் ஏஐ வழிகாட்டும் ட்ரையாஜ்'
+    },
+    landingHeroDesc: {
+        en: 'Get quick symptom triage, emergency severity detection, and next-step recommendations with a clearer and more trustworthy interface.',
+        hi: 'तेज़ लक्षण ट्रायेज, आपातकालीन गंभीरता पहचान और अगले कदमों की सलाह एक अधिक स्पष्ट और भरोसेमंद इंटरफ़ेस में प्राप्त करें।',
+        ta: 'தெளிவான மற்றும் நம்பகமான இடைமுகத்தில் வேகமான அறிகுறி ட்ரையாஜ், அவசர தீவிரத்தன்மை கண்டறிதல் மற்றும் அடுத்த படி பரிந்துரைகளை பெறுங்கள்.'
+    },
+    landingStartTriage: {
+        en: 'Start Triage',
+        hi: 'ट्रायेज शुरू करें',
+        ta: 'ட்ரையாஜ் தொடங்கவும்'
+    },
+    landingLowBandwidth: {
+        en: 'Built for low bandwidth and multilingual use',
+        hi: 'कम बैंडविड्थ और बहुभाषी उपयोग के लिए बनाया गया',
+        ta: 'குறைந்த பாண்ட்வித் மற்றும் பல்மொழி பயன்பாட்டிற்காக உருவாக்கப்பட்டது'
+    },
+    landingLiveSnapshot: {
+        en: 'Live platform snapshot',
+        hi: 'लाइव प्लेटफ़ॉर्म स्नैपशॉट',
+        ta: 'நேரடி தள கண்ணோட்டம்'
+    },
+    landingLivesSupported: {
+        en: 'Lives Supported',
+        hi: 'समर्थित जीवन',
+        ta: 'ஆதரவு பெற்ற உயிர்கள்'
+    },
+    landingCasesTriaged: {
+        en: 'Cases Triaged',
+        hi: 'ट्रायेज किए गए मामले',
+        ta: 'ட்ரையாஜ் செய்யப்பட்ட வழக்குகள்'
+    },
+    landingActiveUsers: {
+        en: 'Active Users',
+        hi: 'सक्रिय उपयोगकर्ता',
+        ta: 'செயலில் உள்ள பயனர்கள்'
+    },
+    landingFeatureVoiceTitle: {
+        en: 'Voice Triage',
+        hi: 'वॉइस ट्रायेज',
+        ta: 'குரல் ட்ரையாஜ்'
+    },
+    landingFeatureVoiceDesc: {
+        en: 'Speak naturally and get symptom guidance in your language.',
+        hi: 'अपनी भाषा में स्वाभाविक रूप से बोलें और लक्षण मार्गदर्शन प्राप्त करें।',
+        ta: 'உங்கள் மொழியில் இயல்பாக பேசுங்கள் மற்றும் அறிகுறி வழிகாட்டலை பெறுங்கள்.'
+    },
+    landingFeaturePhotoTitle: {
+        en: 'Photo-based Analysis',
+        hi: 'फोटो-आधारित विश्लेषण',
+        ta: 'பட அடிப்படையிலான பகுப்பாய்வு'
+    },
+    landingFeaturePhotoDesc: {
+        en: 'Upload a clear image for injury and wound assessment support.',
+        hi: 'चोट और घाव मूल्यांकन सहायता के लिए स्पष्ट तस्वीर अपलोड करें।',
+        ta: 'காயம் மற்றும் புண் மதிப்பீட்டு உதவிக்காக தெளிவான படத்தை பதிவேற்றவும்.'
+    },
+    landingFeatureEmergencyTitle: {
+        en: 'Emergency Priority',
+        hi: 'आपातकालीन प्राथमिकता',
+        ta: 'அவசர முன்னுரிமை'
+    },
+    landingFeatureEmergencyDesc: {
+        en: 'Critical signs are escalated immediately with safety-first advice.',
+        hi: 'गंभीर संकेत मिलने पर तुरंत एस्केलेट किया जाता है और सुरक्षा-प्रथम सलाह दी जाती है।',
+        ta: 'முக்கிய அறிகுறிகள் தென்பட்டவுடன் உடனடியாக உயர்த்தி, பாதுகாப்பு-முதன்மை ஆலோசனை வழங்கப்படுகிறது.'
+    },
     guestMode: {
         en: 'Guest Mode',
         hi: 'अतिथि मोड',
@@ -1064,3 +1154,4 @@ export const useLanguage = () => {
     }
     return context;
 };
+

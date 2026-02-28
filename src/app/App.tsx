@@ -50,15 +50,57 @@ export type AnalysisResult = {
   };
 };
 
+type AppView = 'auth' | 'login' | 'landing' | 'dashboard' | 'symptom' | 'voice' | 'image' | 'emergency' | 'admin' | 'results' | 'history' | 'contacts';
+
+const viewToPath: Record<AppView, string> = {
+  landing: '/',
+  auth: '/auth',
+  login: '/login',
+  dashboard: '/dashboard',
+  symptom: '/symptom',
+  voice: '/voice',
+  image: '/image',
+  emergency: '/emergency',
+  admin: '/admin',
+  results: '/results',
+  history: '/history',
+  contacts: '/contacts',
+};
+
+const pathToView = Object.entries(viewToPath).reduce<Record<string, AppView>>((acc, [view, path]) => {
+  acc[path] = view as AppView;
+  return acc;
+}, {});
+
+function getViewFromPath(pathname: string): AppView {
+  const normalized = pathname.endsWith('/') && pathname !== '/' ? pathname.slice(0, -1) : pathname;
+  return pathToView[normalized] ?? 'landing';
+}
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<'auth' | 'login' | 'landing' | 'dashboard' | 'symptom' | 'voice' | 'image' | 'emergency' | 'admin' | 'results' | 'history' | 'contacts'>('landing');
+  const [currentView, setCurrentView] = useState<AppView>(() => getViewFromPath(window.location.pathname));
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showCriticalAlert, setShowCriticalAlert] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  const navigateTo = (view: AppView, options?: { replace?: boolean }) => {
+    const nextPath = viewToPath[view];
+    setCurrentView(view);
+
+    if (window.location.pathname !== nextPath) {
+      if (options?.replace) {
+        window.history.replaceState({ view }, '', nextPath);
+      } else {
+        window.history.pushState({ view }, '', nextPath);
+      }
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
+      setAuthReady(true);
     });
 
     // Request location permission on app start
@@ -76,34 +118,64 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (window.location.pathname !== viewToPath[currentView]) {
+      window.history.replaceState({ view: currentView }, '', viewToPath[currentView]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(getViewFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (!authReady) return;
+
+    if (!user && (currentView === 'history' || currentView === 'contacts')) {
+      navigateTo('auth', { replace: true });
+    }
+  }, [authReady, user, currentView]);
+
   const handleAnalysisComplete = (result: AnalysisResult) => {
     setAnalysisResult(result);
     if (result.priority === 'Critical') {
       setShowCriticalAlert(true);
     } else {
-      setCurrentView('results');
+      navigateTo('results');
     }
   };
 
   const handleCloseCriticalAlert = () => {
     setShowCriticalAlert(false);
-    setCurrentView('results');
+    navigateTo('results');
   };
 
   const resetApp = () => {
-    setCurrentView('dashboard');
+    navigateTo('dashboard');
     setAnalysisResult(null);
     setShowCriticalAlert(false);
   };
 
   const handleLogout = async () => {
     await auth.signOut();
-    setCurrentView('auth');
+    navigateTo('auth', { replace: true });
   };
 
   return (
     <LanguageProvider>
-      <div className="size-full min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="relative size-full min-h-screen overflow-x-hidden bg-slate-50">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-28 -left-20 h-96 w-96 rounded-full bg-blue-200/35 blur-3xl" />
+          <div className="absolute top-1/3 -right-24 h-[28rem] w-[28rem] rounded-full bg-emerald-200/30 blur-3xl" />
+          <div className="absolute -bottom-28 left-1/3 h-96 w-96 rounded-full bg-pink-200/25 blur-3xl" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.04)_1px,transparent_1px)] bg-[length:22px_22px]" />
+        </div>
+        <div className="relative z-10">
         {showCriticalAlert && analysisResult && (
           <CriticalAlert result={analysisResult} onClose={handleCloseCriticalAlert} />
         )}
@@ -111,30 +183,30 @@ export default function App() {
         {!showCriticalAlert && (
           <>
             {currentView === 'landing' && (
-              <LandingPage onGetStarted={() => setCurrentView('auth')} />
+              <LandingPage onGetStarted={() => navigateTo('auth')} />
             )}
 
             {currentView === 'auth' && (
               <AuthPage
-                onGuestAccess={() => setCurrentView('dashboard')}
-                onLogin={() => setCurrentView('login')}
+                onGuestAccess={() => navigateTo('dashboard')}
+                onLogin={() => navigateTo('login')}
               />
             )}
 
             {currentView === 'login' && (
               <LoginScreen
-                onBack={() => setCurrentView('auth')}
-                onLoginSuccess={() => setCurrentView('dashboard')}
+                onBack={() => navigateTo('auth')}
+                onLoginSuccess={() => navigateTo('dashboard')}
               />
             )}
 
             {currentView === 'dashboard' && (
               <Dashboard
                 user={user}
-                onSelectMode={(mode) => setCurrentView(mode)}
-                onViewAdmin={() => setCurrentView('admin')}
-                onViewHistory={() => setCurrentView('history')}
-                onViewContacts={() => setCurrentView('contacts')}
+                onSelectMode={(mode) => navigateTo(mode)}
+                onViewAdmin={() => navigateTo('admin')}
+                onViewHistory={() => navigateTo('history')}
+                onViewContacts={() => navigateTo('contacts')}
                 onLogout={handleLogout}
               />
             )}
@@ -170,15 +242,15 @@ export default function App() {
             {currentView === 'history' && user && (
               <HistoryView
                 user={user}
-                onBack={() => setCurrentView('dashboard')}
-                onManageContacts={() => setCurrentView('contacts')}
+                onBack={() => navigateTo('dashboard')}
+                onManageContacts={() => navigateTo('contacts')}
               />
             )}
 
             {currentView === 'contacts' && user && (
               <ManageContacts
                 user={user}
-                onBack={() => setCurrentView('history')}
+                onBack={() => navigateTo('history')}
               />
             )}
 
@@ -191,7 +263,7 @@ export default function App() {
             )}
 
             {currentView === 'admin' && (
-              <AdminPanel onBack={() => setCurrentView('dashboard')} />
+              <AdminPanel onBack={() => navigateTo('dashboard')} />
             )}
 
             {/* Global Health Chatbot - Available on all pages except landing */}
@@ -203,6 +275,7 @@ export default function App() {
             )}
           </>
         )}
+        </div>
       </div>
       <Toaster richColors position="top-right" />
     </LanguageProvider>

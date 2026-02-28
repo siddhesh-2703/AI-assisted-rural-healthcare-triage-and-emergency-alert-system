@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { FileText, Mic, Camera, AlertTriangle, BarChart3, ArrowLeft, Heart, LogOut, History, Bell } from 'lucide-react';
+import { AlertTriangle, BarChart3, Bell, Camera, FileText, Heart, History, LogOut, Mic } from 'lucide-react';
 import type { User } from 'firebase/auth';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -11,270 +11,162 @@ interface DashboardProps {
   onViewContacts: () => void;
   onLogout: () => void;
 }
+
+type ModeCard = {
+  id: 'symptom' | 'voice' | 'image' | 'emergency' | 'history' | 'alerts';
+  icon: typeof FileText;
+  title: string;
+  description: string;
+  buttonClass: string;
+  iconClass: string;
+};
+
 export default function Dashboard({
   user,
   onSelectMode,
   onViewAdmin,
   onViewHistory,
   onViewContacts,
-  onLogout
+  onLogout,
 }: DashboardProps) {
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
 
-  const modes: any[] = [
+  const modes: ModeCard[] = [
     {
       id: 'symptom',
       icon: FileText,
       title: t('aiSymptomChecker'),
       description: t('symptomsDescription'),
-      color: 'from-blue-500 to-blue-600',
-      hoverColor: 'from-blue-600 to-blue-700',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-600',
+      buttonClass: 'bg-blue-600 hover:bg-blue-700',
+      iconClass: 'bg-blue-50 text-blue-600',
     },
     {
-      id: 'voice' as const,
+      id: 'voice',
       icon: Mic,
       title: t('voiceConsultation'),
       description: t('speakSymptoms'),
-      color: 'from-purple-500 to-purple-600',
-      hoverColor: 'from-purple-600 to-purple-700',
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-600',
+      buttonClass: 'bg-purple-600 hover:bg-purple-700',
+      iconClass: 'bg-purple-50 text-purple-600',
     },
     {
-      id: 'image' as const,
+      id: 'image',
       icon: Camera,
       title: t('imageAnalysis'),
       description: t('uploadClearPhoto'),
-      color: 'from-pink-500 to-pink-600',
-      hoverColor: 'from-pink-600 to-pink-700',
-      bgColor: 'bg-pink-50',
-      textColor: 'text-pink-600',
+      buttonClass: 'bg-pink-600 hover:bg-pink-700',
+      iconClass: 'bg-pink-50 text-pink-600',
     },
     {
-      id: 'emergency' as const,
+      id: 'emergency',
       icon: AlertTriangle,
       title: t('emergency'),
       description: t('fastTrackCritical'),
-      color: 'from-red-500 to-red-600',
-      hoverColor: 'from-red-600 to-red-700',
-      bgColor: 'bg-red-50',
-      textColor: 'text-red-600',
+      buttonClass: 'bg-red-600 hover:bg-red-700',
+      iconClass: 'bg-red-50 text-red-600',
     },
   ];
 
   if (user) {
     modes.push({
-      id: 'history' as any,
+      id: 'history',
       icon: History,
       title: t('medicalHistory'),
       description: t('pastReportsDesc'),
-      color: 'from-emerald-500 to-emerald-600',
-      hoverColor: 'from-emerald-600 to-emerald-700',
-      bgColor: 'bg-emerald-50',
-      textColor: 'text-emerald-600',
+      buttonClass: 'bg-emerald-600 hover:bg-emerald-700',
+      iconClass: 'bg-emerald-50 text-emerald-600',
     });
     modes.push({
-      id: 'alerts' as any,
+      id: 'alerts',
       icon: Bell,
       title: t('guardianContacts'),
       description: t('manageContactsDesc'),
-      color: 'from-orange-500 to-orange-600',
-      hoverColor: 'from-orange-600 to-orange-700',
-      bgColor: 'bg-orange-50',
-      textColor: 'text-orange-600',
+      buttonClass: 'bg-orange-600 hover:bg-orange-700',
+      iconClass: 'bg-orange-50 text-orange-600',
     });
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-20 left-20 w-64 h-64 bg-blue-300/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-20 w-80 h-80 bg-purple-300/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-          }}
-        />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-8">
-        {/* Header */}
-        <motion.div
-          className="flex items-center justify-between mb-12"
-          initial={{ y: -20, opacity: 0 }}
+    <div className="min-h-screen px-6 py-8 md:px-10 lg:px-14">
+      <div className="mx-auto w-full max-w-7xl">
+        <motion.header
+          className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/70 bg-white/75 px-5 py-4 shadow-sm backdrop-blur-xl"
+          initial={{ y: -12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.45 }}
         >
           <div className="flex items-center gap-3">
-            <motion.div
-              className="p-3 bg-white rounded-full shadow-lg"
-              animate={{ rotate: [0, 5, 0, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <Heart className="w-8 h-8 text-red-500 fill-red-500" />
-            </motion.div>
+            <div className="rounded-xl bg-red-50 p-2.5 text-red-600">
+              <Heart className="h-5 w-5 fill-red-600" />
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">{t('appName')}</h1>
-              <p className="text-gray-600 font-medium">
+              <h1 className="text-xl font-semibold text-slate-900">{t('appName')}</h1>
+              <p className="text-sm text-slate-600">
                 {user ? `${t('welcome')}, ${user.email?.split('@')[0]}` : t('selectDiagnosisMethod')}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <motion.button
+          <div className="flex items-center gap-2">
+            <button
               onClick={onViewAdmin}
-              className="flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-xl rounded-full border border-white/20 shadow-lg hover:shadow-xl transition-shadow"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
             >
-              <BarChart3 className="w-5 h-5 text-gray-700" />
-              <span className="text-gray-700 font-medium md:inline hidden">{t('adminPanel')}</span>
-            </motion.button>
-
+              <BarChart3 className="h-4 w-4" />
+              {t('adminPanel')}
+            </button>
             {user && (
-              <motion.button
+              <button
                 onClick={onLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-50 rounded-full border border-red-100 shadow-sm hover:bg-red-100 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
               >
-                <LogOut className="w-5 h-5 text-red-600" />
-                <span className="text-red-600 font-bold md:inline hidden">{t('logout')}</span>
-              </motion.button>
+                <LogOut className="h-4 w-4" />
+                {t('logout')}
+              </button>
             )}
           </div>
-        </motion.div>
+        </motion.header>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {modes.map((mode, index) => (
-            <motion.div
-              key={mode.id}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.03, y: -5 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                if (mode.id === 'history') onViewHistory();
-                else if (mode.id === 'alerts') onViewContacts();
-                else onSelectMode(mode.id);
-              }}
-              className="cursor-pointer group relative"
-            >
-              {/* Glow Effect */}
-              <motion.div
-                className={`absolute inset-0 bg-gradient-to-br ${mode.color} rounded-3xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity`}
-              />
-
-              {/* Card */}
-              <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-xl hover:shadow-2xl transition-all">
-                {/* Icon */}
-                <motion.div
-                  className={`inline-flex p-4 rounded-2xl ${mode.bgColor} mb-6`}
-                  whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <mode.icon className={`w-8 h-8 ${mode.textColor}`} />
-                </motion.div>
-
-                {/* Content */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                  {mode.title}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {mode.description}
-                </p>
-
-                {/* Action Button */}
-                <motion.div
-                  className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${mode.color} text-white rounded-full font-medium shadow-lg`}
-                  whileHover={{ x: 5 }}
-                >
-                  {t('start')}
-                  <ArrowLeft className="w-4 h-4 rotate-180" />
-                </motion.div>
-
-                {/* Pulse Animation for Emergency */}
-                {mode.id === 'emergency' && (
-                  <motion.div
-                    className="absolute top-4 right-4 w-3 h-3 bg-red-500 rounded-full"
-                    animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [1, 0, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                  />
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Info Cards */}
-        <motion.div
-          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-          initial={{ y: 30, opacity: 0 }}
+        <motion.section
+          className="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+          initial={{ y: 16, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {[
-            { emoji: '⚡', text: t('resultsInSeconds') },
-            { emoji: '🌐', text: t('worksLowBandwidth') },
-            { emoji: '🔒', text: t('dataPrivacy') },
-          ].map((info, index) => (
-            <motion.div
-              key={index}
-              className="flex items-center gap-3 p-4 bg-white/60 backdrop-blur-xl rounded-2xl border border-white/20 shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="text-3xl">{info.emoji}</div>
-              <p className="text-gray-700 font-medium">{info.text}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Emergency Notice */}
-        <motion.div
-          className="mt-12 max-w-3xl mx-auto"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <div className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-orange-500 rounded-xl">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-semibold text-gray-800 mb-1">{t('medicalDisclaimer')}</h4>
-                <p className="text-sm text-gray-600">
-                  {t('medicalDisclaimer')}
-                </p>
+          {modes.map((mode) => (
+            <article key={mode.id} className="rounded-2xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-xl">
+              <div className={`mb-4 inline-flex rounded-xl p-2.5 ${mode.iconClass}`}>
+                <mode.icon className="h-5 w-5" />
               </div>
+              <h2 className="text-lg font-semibold text-slate-900">{mode.title}</h2>
+              <p className="mt-2 min-h-11 text-sm text-slate-600">{mode.description}</p>
+              <button
+                onClick={() => {
+                  if (mode.id === 'history') onViewHistory();
+                  else if (mode.id === 'alerts') onViewContacts();
+                  else onSelectMode(mode.id);
+                }}
+                className={`mt-5 inline-flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-colors ${mode.buttonClass}`}
+              >
+                {t('start')}
+              </button>
+            </article>
+          ))}
+        </motion.section>
+
+        <motion.section
+          className="mt-8 rounded-2xl border border-amber-200 bg-amber-50/80 p-5"
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.45, delay: 0.2 }}
+        >
+          <div className="flex gap-3">
+            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">{t('medicalDisclaimer')}</h3>
+              <p className="mt-1 text-sm text-slate-600">{t('medicalDisclaimer')}</p>
             </div>
           </div>
-        </motion.div>
+        </motion.section>
       </div>
     </div>
   );

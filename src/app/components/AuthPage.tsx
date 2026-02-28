@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Activity, Globe, ArrowRight, Ambulance, History, Cross, HeartPulse, Microscope, Thermometer } from 'lucide-react';
+import { Shield, Activity, ArrowRight, Ambulance, History, Cross, HeartPulse, Microscope, Thermometer } from 'lucide-react';
 import { Button } from './ui/button';
-import { useLanguage, LanguageType } from '../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface AuthPageProps {
     onGuestAccess: () => void;
@@ -10,7 +10,7 @@ interface AuthPageProps {
 }
 
 export default function AuthPage({ onGuestAccess, onLogin }: AuthPageProps) {
-    const { language, setLanguage, t } = useLanguage();
+    const { language, t } = useLanguage();
 
     return (
         <div className="h-screen h-[100dvh] flex flex-col bg-white overflow-hidden relative">
@@ -74,8 +74,8 @@ export default function AuthPage({ onGuestAccess, onLogin }: AuthPageProps) {
                 style={{ backgroundImage: `radial-gradient(#3b82f6 2px, transparent 2px)`, backgroundSize: '50px 50px' }}
             />
 
-            {/* Top Header with Language Toggle */}
-            <header className="p-6 flex justify-between items-center relative z-10">
+            {/* Top Header */}
+            <header className="p-6 flex items-center relative z-10">
                 <motion.div
                     className="flex items-center gap-2.5"
                     initial={{ x: -20, opacity: 0 }}
@@ -90,28 +90,6 @@ export default function AuthPage({ onGuestAccess, onLogin }: AuthPageProps) {
                         <Shield className="w-7 h-7 text-blue-600 relative z-10" />
                     </div>
                     <span className="text-sm font-black text-blue-900 tracking-[0.2em] uppercase">{t('appName')}</span>
-                </motion.div>
-
-                <motion.div
-                    className="bg-white/60 backdrop-blur-xl p-1.5 rounded-full flex items-center gap-1 border border-white/40 shadow-xl shadow-slate-200/50"
-                    initial={{ x: 20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                >
-                    {(['en', 'hi', 'ta'] as LanguageType[]).map((lang) => (
-                        <Button
-                            key={lang}
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setLanguage(lang)}
-                            className={`h-9 rounded-full px-4 text-xs font-black transition-all ${language === lang
-                                ? "bg-blue-600 text-white shadow-lg"
-                                : "text-slate-400 hover:text-blue-600"
-                                }`}
-                        >
-                            {lang.toUpperCase()}
-                        </Button>
-                    ))}
-                    <Globe className="w-4 h-4 mx-2 text-slate-300" />
                 </motion.div>
             </header>
 

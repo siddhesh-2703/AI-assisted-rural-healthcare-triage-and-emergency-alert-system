@@ -1,261 +1,156 @@
 import { motion } from 'motion/react';
-import { Heart, Activity, Users, MapPin, ArrowRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Activity, ArrowRight, Heart, MapPin, ShieldCheck, Stethoscope, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useLanguage, type LanguageType } from '../context/LanguageContext';
 
 interface LandingPageProps {
   onGetStarted: () => void;
 }
 
 export default function LandingPage({ onGetStarted }: LandingPageProps) {
-  const [livesSaved, setLivesSaved] = useState(12847);
-  const [casesHandled, setCasesHandled] = useState(45892);
-  const [activeUsers, setActiveUsers] = useState(8234);
+  const { language, setLanguage, t } = useLanguage();
+  const [liveStats, setLiveStats] = useState({
+    lives: 12847,
+    cases: 45892,
+    users: 8234,
+  });
+
+  const stats = [
+    { label: t('landingLivesSupported'), key: 'lives', icon: Heart, className: 'text-red-600 bg-red-50' },
+    { label: t('landingCasesTriaged'), key: 'cases', icon: Activity, className: 'text-blue-600 bg-blue-50' },
+    { label: t('landingActiveUsers'), key: 'users', icon: Users, className: 'text-emerald-600 bg-emerald-50' },
+  ] as const;
+
+  const features = [
+    { title: t('landingFeatureVoiceTitle'), description: t('landingFeatureVoiceDesc'), icon: Stethoscope },
+    { title: t('landingFeaturePhotoTitle'), description: t('landingFeaturePhotoDesc'), icon: Activity },
+    { title: t('landingFeatureEmergencyTitle'), description: t('landingFeatureEmergencyDesc'), icon: ShieldCheck },
+  ] as const;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setLivesSaved(prev => prev + Math.floor(Math.random() * 3));
-      setCasesHandled(prev => prev + Math.floor(Math.random() * 5));
-      setActiveUsers(prev => prev + Math.floor(Math.random() * 2));
+      setLiveStats((prev) => ({
+        lives: prev.lives + Math.floor(Math.random() * 3),
+        cases: prev.cases + Math.floor(Math.random() * 5),
+        users: prev.users + Math.floor(Math.random() * 2),
+      }));
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, -30, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-400/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.4, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      </div>
-
-      {/* Header */}
-      <motion.header
-        className="relative z-10 pt-6 px-6 md:px-12"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <motion.div
-              className="absolute inset-0 bg-red-500 rounded-full blur-md"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            <div className="relative bg-white rounded-full p-3 shadow-lg">
-              <Heart className="w-6 h-6 text-red-500 fill-red-500" />
+    <div className="relative min-h-screen px-6 py-8 md:px-10 lg:px-14">
+      <div className="mx-auto w-full max-w-7xl">
+        <motion.header
+          className="mb-10 flex items-center justify-between rounded-2xl border border-white/70 bg-white/75 px-5 py-4 shadow-sm backdrop-blur-xl"
+          initial={{ y: -12, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl bg-red-50 p-2.5 text-red-600">
+              <Heart className="h-5 w-5 fill-red-600" />
+            </div>
+            <div>
+              <h1 className="text-base font-semibold text-slate-900 md:text-lg">{t('landingBrand')}</h1>
+              <p className="text-xs text-slate-600">{t('landingSubBrand')}</p>
             </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
-              HealthAI Triage
-            </h1>
-            <p className="text-sm text-gray-600">Rural Healthcare Revolution</p>
+          <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white/90 p-1">
+              {(['en', 'hi', 'ta'] as LanguageType[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    language === lang ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {lang.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={onGetStarted}
+              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+            >
+              {t('landingEnterPlatform')}
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
-        </div>
-      </motion.header>
+        </motion.header>
 
-      {/* Hero Section */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20">
-        <div className="text-center">
-          {/* Animated Heartbeat Line */}
+        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <motion.div
-            className="mb-8 flex justify-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            initial={{ y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <svg width="200" height="60" viewBox="0 0 200 60" className="text-red-500">
-              <motion.path
-                d="M 0 30 L 40 30 L 50 10 L 60 50 L 70 20 L 80 40 L 90 30 L 200 30"
-                stroke="currentColor"
-                strokeWidth="3"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            </svg>
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+              <MapPin className="h-3.5 w-3.5" />
+              {t('landingServingCommunities')}
+            </p>
+            <h2 className="text-4xl font-semibold leading-tight text-slate-900 md:text-5xl lg:text-6xl">
+              {t('landingHeroTitle')}
+            </h2>
+            <p className="mt-5 max-w-2xl text-base text-slate-600 md:text-lg">
+              {t('landingHeroDesc')}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                onClick={onGetStarted}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+              >
+                {t('landingStartTriage')}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <div className="inline-flex items-center rounded-xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-600">
+                {t('landingLowBandwidth')}
+              </div>
+            </div>
           </motion.div>
 
-          {/* Main Headline */}
-          <motion.h2
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-            initial={{ y: 30, opacity: 0 }}
+          <motion.div
+            className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-xl backdrop-blur-xl md:p-6"
+            initial={{ y: 16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              AI That Saves Lives
-            </span>
-            <br />
-            <span className="text-gray-800">
-              Before It's Too Late
-            </span>
-          </motion.h2>
+            <p className="mb-4 text-sm font-semibold text-slate-500">{t('landingLiveSnapshot')}</p>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {stats.map((item) => (
+                <div key={item.key} className="rounded-2xl border border-slate-100 bg-white p-4">
+                  <div className={`mb-3 inline-flex rounded-xl p-2 ${item.className}`}>
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <p className="text-2xl font-semibold text-slate-900">
+                    {liveStats[item.key].toLocaleString()}
+                  </p>
+                  <p className="text-xs text-slate-500">{item.label}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
 
-          <motion.p
-            className="text-lg md:text-xl text-gray-600 mb-12 max-w-3xl mx-auto"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            Intelligent healthcare triage system powered by AI. 
-            Get instant diagnosis, emergency prioritization, and life-saving guidance 
-            for rural communities with limited medical access.
-          </motion.p>
-
-          {/* CTA Button */}
-          <motion.button
-            onClick={onGetStarted}
-            className="group relative px-8 py-4 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-full shadow-2xl overflow-hidden"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-pink-600 to-red-600"
-              initial={{ x: '100%' }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.3 }}
-            />
-            <span className="relative z-10 flex items-center gap-2 text-lg font-semibold">
-              Get Started Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </motion.button>
-        </div>
-
-        {/* Statistics */}
-        <motion.div
-          className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
-          initial={{ y: 40, opacity: 0 }}
+        <motion.section
+          className="mt-12 grid gap-4 md:grid-cols-3"
+          initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1 }}
+          transition={{ duration: 0.55, delay: 0.35 }}
         >
-          {[
-            { icon: Heart, label: 'Lives Saved', value: livesSaved, color: 'red' },
-            { icon: Activity, label: 'Cases Handled', value: casesHandled, color: 'blue' },
-            { icon: Users, label: 'Active Users', value: activeUsers, color: 'purple' },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              className="relative group"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/30 rounded-2xl backdrop-blur-xl border border-white/20 shadow-xl" />
-              <div className="relative p-6 text-center">
-                <motion.div
-                  className={`inline-flex p-3 rounded-full bg-${stat.color}-100 mb-3`}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
-                </motion.div>
-                <motion.div
-                  className={`text-3xl font-bold text-${stat.color}-600 mb-1`}
-                  key={stat.value}
-                  initial={{ scale: 1.2, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {stat.value.toLocaleString()}
-                </motion.div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+          {features.map((feature) => (
+            <article key={feature.title} className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-sm backdrop-blur-xl">
+              <div className="mb-3 inline-flex rounded-xl bg-slate-100 p-2 text-slate-700">
+                <feature.icon className="h-5 w-5" />
               </div>
-            </motion.div>
+              <h3 className="text-lg font-semibold text-slate-900">{feature.title}</h3>
+              <p className="mt-2 text-sm text-slate-600">{feature.description}</p>
+            </article>
           ))}
-        </motion.div>
-
-        {/* Features Grid */}
-        <motion.div
-          className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-        >
-          {[
-            { icon: '🗣️', title: 'Voice Diagnosis', desc: 'Speak your symptoms in any language' },
-            { icon: '📸', title: 'Image Analysis', desc: 'AI-powered wound & injury detection' },
-            { icon: '⚡', title: 'Instant Triage', desc: 'Get priority level in seconds' },
-            { icon: '🚑', title: 'Emergency Alert', desc: 'Auto ambulance for critical cases' },
-          ].map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              className="relative group"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1.6 + index * 0.1 }}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/30 rounded-xl backdrop-blur-xl border border-white/20 shadow-lg group-hover:shadow-2xl transition-shadow" />
-              <div className="relative p-6 text-center">
-                <div className="text-4xl mb-3">{feature.icon}</div>
-                <h3 className="font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        </motion.section>
       </div>
-
-      {/* Footer Badge */}
-      <motion.div
-        className="relative z-10 text-center pb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2 }}
-      >
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-xl rounded-full border border-white/20 shadow-lg">
-          <MapPin className="w-4 h-4 text-green-600" />
-          <span className="text-sm text-gray-700">Serving 500+ Rural Communities</span>
-        </div>
-      </motion.div>
     </div>
   );
 }
