@@ -18,8 +18,18 @@ const XAI_API_KEY =
   import.meta.env.VITE_XAI_API_KEY ||
   '';
 const GROQ_API_KEY_LEGACY = import.meta.env.VITE_GROQ_API_KEY || '';
-export const AI_PROVIDER = (import.meta.env.VITE_AI_PROVIDER || (XAI_API_KEY ? 'grok' : GROQ_API_KEY_LEGACY ? 'groq' : 'grok')).toLowerCase();
+const REQUESTED_PROVIDER = (import.meta.env.VITE_AI_PROVIDER || '').toLowerCase();
 export const GROK_API_KEY = XAI_API_KEY || GROQ_API_KEY_LEGACY;
+const HAS_AI_KEY = Boolean(GROK_API_KEY);
+const KEY_LOOKS_GROQ = GROK_API_KEY.startsWith('gsk_');
+const INFERRED_PROVIDER = XAI_API_KEY ? 'grok' : GROQ_API_KEY_LEGACY ? 'groq' : 'grok';
+export const AI_PROVIDER = !HAS_AI_KEY
+  ? (REQUESTED_PROVIDER || INFERRED_PROVIDER)
+  : KEY_LOOKS_GROQ
+    ? 'groq'
+    : REQUESTED_PROVIDER === 'groq'
+      ? 'grok'
+      : (REQUESTED_PROVIDER || INFERRED_PROVIDER);
 export const GROK_MODEL =
   import.meta.env.VITE_GROK_MODEL ||
   (AI_PROVIDER === 'groq' ? 'llama-3.3-70b-versatile' : 'grok-2-latest');
@@ -27,19 +37,53 @@ export const GROK_VISION_MODEL =
   import.meta.env.VITE_GROK_VISION_MODEL ||
   (AI_PROVIDER === 'groq' ? 'llama-3.2-11b-vision-preview' : 'grok-2-vision-latest');
 export const AI_BASE_URL = AI_PROVIDER === 'groq' ? 'https://api.groq.com/openai/v1' : 'https://api.x.ai/v1';
+const PROVIDER_AUTO_CORRECTED = Boolean(REQUESTED_PROVIDER) && REQUESTED_PROVIDER !== AI_PROVIDER;
+
+if (typeof window !== 'undefined') {
+  console.info('[AI Config]', {
+    provider: AI_PROVIDER,
+    baseURL: AI_BASE_URL,
+    model: GROK_MODEL,
+    visionModel: GROK_VISION_MODEL,
+    useGrok: USE_GROK,
+    hasApiKey: HAS_AI_KEY,
+  });
+
+  if (!HAS_AI_KEY && USE_GROK) {
+    console.warn('[AI Config] Missing API key. Set VITE_GROK_API_KEY (xAI) or VITE_GROQ_API_KEY (Groq).');
+  }
+
+  if (PROVIDER_AUTO_CORRECTED) {
+    console.warn(`[AI Config] Auto-corrected provider from "${REQUESTED_PROVIDER}" to "${AI_PROVIDER}" based on available key.`);
+  }
+}
 
 export const openai = USE_OPENAI ? new OpenAI({
   apiKey: 'YOUR_OPENAI_KEY',
   dangerouslyAllowBrowser: true,
 }) : null;
 
-export const grok = USE_GROK ? new OpenAI({
+export const grok = USE_GROK && HAS_AI_KEY ? new OpenAI({
   apiKey: GROK_API_KEY,
   baseURL: AI_BASE_URL,
   dangerouslyAllowBrowser: true,
 }) : null;
 export const USE_LLAMA = USE_GROK;
 export const groq = grok;
+
+function summarizeApiError(error: unknown) {
+  const err = error as {
+    status?: number;
+    code?: string;
+    message?: string;
+    error?: { message?: string; code?: string };
+  };
+  return {
+    status: err?.status ?? null,
+    code: err?.code ?? err?.error?.code ?? null,
+    message: err?.message ?? err?.error?.message ?? 'Unknown API error',
+  };
+}
 
 // Intelligent rule-based fallback analysis (production-quality)
 function intelligentAnalysis(symptomsText: string): AnalysisResult {
@@ -454,7 +498,7 @@ Rules:
 
       return result as AnalysisResult;
     } catch (error) {
-      console.error('Grok API Error:', error);
+      console.error('Grok API Error:', summarizeApiError(error));
       // Continue to OpenAI or fallback
     }
   }
@@ -642,7 +686,7 @@ export async function chatWithAI(message: string, language: 'en' | 'hi' | 'ta'):
 
       return completion.choices[0]?.message?.content || 'I apologize, I could not process your request.';
     } catch (error) {
-      console.error('Grok Chatbot Error:', error);
+      console.error('Grok Chatbot Error:', summarizeApiError(error));
       // Continue to OpenAI or fallback
     }
   }
